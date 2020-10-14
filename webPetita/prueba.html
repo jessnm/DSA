@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<title>GitLibrary</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<link rel="shortcut icon" href="libro.ico" type="image/x-icon">
+	<script>
+		$(document).ready(function(){
+			$("#frmTable").hide();
+			$("#frmTest").submit(false);
+			$("#btnTest").click(function(){
+			  var name1 = $('#username').val();
+			  //alert(name1);
+			  var success = "false";
+			  $.get("https://api.github.com/users/" +name1+ "/repos", function(data,success,error){
+				if(success == "success" && data.length > 0){
+					var statusHTML = '';
+					$.each(data,function(i,status){
+					  statusHTML += '<tr>';
+					  statusHTML += '<td>' + status.id + '</td>';
+					  statusHTML += '<td>' + status.description + '</td>';
+					  statusHTML += '<td>' + status.stargazers_count + '</td>';
+					  statusHTML += '</tr>';				  
+					  });
+					  $('tbody').html(statusHTML);
+					  $("#frmTest").hide();
+					  $("#frmTable").show();
+				} else {
+				alert("User has no repositories!");
+				}
+			
+			}).fail(function() {
+				alert('User does not exist!');
+			});
+			
+			$("#btnBack").click(function(){
+			  $("#frmTable").hide();
+			  $("#frmTest").show();
+			});
+		});
+		});
+	</script>
+  </head>
+  <body style="background-color:rgb(214, 234, 248);">
+	<div class="jumbotron"; style="background-color:rgb(174, 214, 241);">
+	  <h1 class= "text-center"><strong><em>Welcome to GitLibrary</em></strong></h1>
+	</div>	
+	<form id="frmTest" style="color:black; text-align:center;">
+	  <label for="username">Username:</label>
+	  &nbsp
+	  <input type="text" id="username" name="username">
+	  &nbsp
+	  <button type="button" class="btn btn-primary" id="btnTest">Submit</button><br>
+	  <img src="books.png" class="img-rounded">
+	</form>
+	<form id="frmTable">
+	<div class="container">
+	<h2 style="color:black; text-align:center;"><strong>RESPOSITORIES TABLE</strong></h2>
+	<table class="table table-striped">
+		<thead>
+		  <tr>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Followers</th>
+		  </tr>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+	<button type="button" class="btn btn-primary" id="btnBack">Back</button>
+	</div>
+  </body>
+</html>
